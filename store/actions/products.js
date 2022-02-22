@@ -10,6 +10,7 @@ import {
     SET_CATEGORY,
 } from '../reducers/products/types'
 import { addNotification } from './notifications'
+import { convertFile } from '../../utility/files'
 import axios from '../../utility/apiClient'
 const API ='http://localhost:3000/api'
 
@@ -90,14 +91,17 @@ export const createSuperCategory = (formData) => async (dispatch,getState) => {
     let status = true 
     try {
         const data = {}
+        const image =  await convertFile(formData.image.file)
+        console.log(image)
         Object.keys(formData).forEach(key => {
-            data[key] = formData[key].value
+            data[key] = formData[key].value !== undefined  ? formData[key].value : image
         })
         dispatch(supercategoriesLoading(true))
         let res = await axios.post(`${API}/supercategories/manage`,data)
         dispatch(addNotification({notification:res.data.message,variant:'success'}))
         await dispatch(getSupercategories())
     } catch (error) {
+        console.log(error)
         status = false
         dispatch(addNotification({notification:'Supercategory was not created',variant:'error'}))
     } finally {
@@ -113,8 +117,9 @@ export const updateSuperCategory = (id,formData) => async (dispatch,getState) =>
     try {
         if(!id) throw new Error('No supercategory provided')
         const data = {}
+        const image =  formData.image?.file ? await convertFile(formData.image.file) : formData.image.src
         Object.keys(formData).forEach(key => {
-            data[key] = formData[key].value
+            data[key] = formData[key].value !== undefined  ? formData[key].value  : image
         })
         data.id = id
         dispatch(supercategoriesLoading(true))

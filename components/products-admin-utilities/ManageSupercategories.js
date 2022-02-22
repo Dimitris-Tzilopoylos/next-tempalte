@@ -11,17 +11,25 @@ import Divider from '@mui/material/Divider'
 import DataTable from '../data-table/DataTable'
 import Message from '../ui/Message'
 import CustomButton from '../ui/Button'
-import { Delete, Visibility, VisibilityOff } from '@mui/icons-material'
+import  Delete from '@mui/icons-material/Delete'
+import  Visibility from '@mui/icons-material/Visibility'
+import  VisibilityOff from '@mui/icons-material/VisibilityOff'
+import Avatar from '@mui/material/Avatar'
+
 
 
 const columns = [
     { field: 'id', headerName: 'ID', width: 80 },
+    {field:'supercategory_image',
+    width:150,
+    headerName:'Image',
+    renderCell: (params) =>  <Avatar src={params.value} />
+    },
     {
       field: 'supercategory_name',
       headerName: 'Name',
-      width: 200,
-      minWidth:150,
-      maxWidth:300,
+      width: 120,
+ 
       },
     {
         field: 'total_categories',
@@ -101,7 +109,7 @@ export const ManageSupercategories = (props) => {
             <CardLayout sx={{p:2}}>
                 <Title sx={{justifyContent:'flex-start'}}>
                     <Edit color="warning" />
-                    <h4>Supercategory Form</h4>
+                     Supercategory Form 
                 </Title>
                 <Divider sx={{mb:2}} />
                 <SupercategoryForm 
@@ -116,6 +124,7 @@ export const ManageSupercategories = (props) => {
         <Grid item md={8} xs={12} >
             {supercategories?.length > 0  && !loading ? 
             <DataTable
+                sx={{minHeight:'200px'}}
                 columns={columns}
                 rows={supercategories.map(_super => ({..._super,
                     update: (e)=>handleUpdateSuper(_super),

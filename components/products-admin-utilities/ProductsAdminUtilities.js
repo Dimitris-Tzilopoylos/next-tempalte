@@ -1,10 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Grid } from '@mui/material'
+import  Grid  from '@mui/material/Grid'
 import  Edit from '@mui/icons-material/Edit'
 import TabContainer from '../tabs/TabContainer'
 import Tab from '../tabs/Tab'
-import {Category,ClassOutlined,Inventory2Outlined} from '@mui/icons-material'
+import Category from '@mui/icons-material/Category'
+import ClassOutlined  from '@mui/icons-material/ClassOutlined'
+import  Inventory2Outlined from '@mui/icons-material/Inventory2Outlined'
+
 import ManageSupercategories from './ManageSupercategories'
 
 const tabs = [

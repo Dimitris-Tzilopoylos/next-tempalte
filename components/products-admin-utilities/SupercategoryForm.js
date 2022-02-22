@@ -1,11 +1,15 @@
 import React from 'react'
 import Input from '../ui/Input'
 import CustomSwitch from '../ui/Switch'
+import FileButton from '../file-button/FileButton'
 import ValidationService from '../../services/ValidationService'
 import CustomButton from '../ui/Button'
 import Edit from '@mui/icons-material/Edit'
 import Grid from '@mui/material/Grid'
-import { Cancel } from '@mui/icons-material'
+import  Cancel from '@mui/icons-material/Cancel'
+import IconButton from '@mui/material/IconButton'
+import Delete from '@mui/icons-material/Delete'
+import Message from '../ui/Message'
 const vdService = new ValidationService()
 const validationTextData = {
     "supercategory_name":{min:2,max:20,error:'This field should be between 2 and 20 characters long'},
@@ -19,6 +23,8 @@ export default function SupercategoryForm(props) {
         supercategory_description:{isValid:false,error:'',value:props.supercategory?.supercategory_description ?? ''},
         supercategory_visibility:{isValid:true,error:'',value:props.supercategory?.supercategory_visibility ?? true}
     })
+    const [fileError,setFileError] = React.useState(null)
+    const [image,setImage] = React.useState(null)
     const [loading,setLoading] = React.useState(false)
 
     const onChange = (e) => {
@@ -44,13 +50,15 @@ export default function SupercategoryForm(props) {
     const onSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
-        let res = await props.onSubmit(formData)
+        const data = {...formData,image}
+        let res = await props.onSubmit(data)
         if(res) {
             setFormData({
                 supercategory_name:{isValid:false,error:'',value:props.supercategory_name ?? ''},
                 supercategory_description:{isValid:false,error:'',value:props.supercategory_description ?? ''},
                 supercategory_visibility:{isValid:true,error:'',value:props.supercategory_visibility ?? true}
             })
+            setImage(null)
         }
         setLoading(false)
     }
@@ -61,7 +69,26 @@ export default function SupercategoryForm(props) {
             supercategory_description:{isValid:false,error:'',value: ''},
             supercategory_visibility:{isValid:true,error:'',value: true}
         })
+        setImage(null)
         if(props.cancel instanceof Function) props.cancel(e)
+    }
+
+    const onFileInput = (e,file,error) => {
+        if(!file) setImage(null)
+        try {
+            if(error) {
+                return setFileError(error)
+            }
+            const src = URL.createObjectURL(file)
+            setImage({file,src})
+            setFileError(null)
+        } catch (error) {
+            
+        }
+    }
+
+    const onFileDelete = () => {
+        setImage(null)
     }
 
 
@@ -72,6 +99,7 @@ export default function SupercategoryForm(props) {
                 supercategory_description:{isValid:true,error:'',value:props.supercategory?.supercategory_description ?? ''},
                 supercategory_visibility:{isValid:true,error:'',value:props.supercategory?.supercategory_visibility  ?? true}
             })
+            setImage(props.supercategory ? {file:null,src:props?.supercategory?.supercategory_image} : null)
          
     },[props.supercategory])
 
@@ -122,6 +150,32 @@ export default function SupercategoryForm(props) {
                         name={"supercategory_visibility"}
                     />
                 </Grid>
+                <Grid item md={3} xs={12}>
+                     
+                </Grid>
+                <Grid item md={3} xs={12}>
+                    <FileButton onFileInput={onFileInput} maxFilesSize={1} />
+                </Grid>
+                <Grid item md={12} xs={12}>
+                    <Grid container spacing={2}>
+                        <Grid item md={image ? 10 : 12} xs={image ? 10 : 12}>
+                        {image 
+                            ? <img width="100%" src={image.src} alt="Image upload" />
+                            : <Message  severity="info" message="No image uploaded"/> 
+                        }
+                        </Grid>
+                        <Grid item md={2} xs={2}>
+                        {image 
+                            ? <IconButton onClick={onFileDelete} color="error" disabled={loading || !image}><Delete /></IconButton>
+                            : null 
+                        }   
+                        </Grid>
+                        <Grid item md={12} xs={12}>
+                            <Message severity="warning" message={fileError}/> 
+                        </Grid>
+                    </Grid>
+                   
+                </Grid>
                 <Grid item md={12} xs={12} sx={{display:'flex',justifyContent:'center'}}>
                  <CustomButton 
                  endIcon={<Edit />} 
@@ -130,7 +184,7 @@ export default function SupercategoryForm(props) {
                  color="primary" 
                  variant="contained"
                  loading={loading}
-                 disabled={loading || !!Object.values(formData).find(value => !value.isValid)}
+                 disabled={!image || loading || !!Object.values(formData).find(value => !value.isValid)}
                  > 
                  {props.supercategory?.id ? 'UPDATE' : 'CREATE'} </CustomButton>
                  {props.supercategory?.id  && props.cancel instanceof Function ? 

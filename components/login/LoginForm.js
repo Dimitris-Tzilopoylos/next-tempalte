@@ -13,7 +13,7 @@ import Message from '../ui/Message'
 import CardLayout from '../../layout/CardLayout'
 import {useRouter} from 'next/router'
 import LockOpen from '@mui/icons-material/LockOpen'
-import { Typography } from '@mui/material'
+import  Typography from '@mui/material/Typography'
 
 
 const vdService = new ValidationService()
