@@ -15,8 +15,38 @@ const darkTheme = createTheme({
     secondary:amber,
     
   },
-   
-
+  components:{
+    MuiButton:{
+      styleOverrides:{
+        root:{
+          "&.Mui-disabled":{
+            pointerEvents:'unset',
+            cursor:'not-allowed'
+          }
+        }
+      }
+    },
+    MuiButtonBase:{
+      styleOverrides:{
+        root:{
+          "&.Mui-disabled":{
+            pointerEvents:'unset',
+            cursor:'not-allowed'
+          }
+        }
+      }
+    },
+    MuiInput:{
+      styleOverrides:{
+        root:{
+          "&.Mui-disabled":{
+            pointerEvents:'unset',
+            cursor:'not-allowed'
+          }
+        }
+      }
+    }
+  }
 });
 
 export default darkTheme;

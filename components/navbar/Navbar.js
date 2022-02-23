@@ -15,8 +15,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import ThemeSwitch from '../theme-switch/ThemeSwitch'
 import {useRouter} from 'next/router'
 import NavigationLink from '../navlink/NavigationLink'
 import useUser from '../../hooks/useUser';
@@ -109,7 +108,7 @@ export default function Navbar(props) {
             </NavigationLink>
            
           </Typography>
-          
+          <ThemeSwitch checked={props.theme} onChange={props.toggleTheme} />
         </Toolbar>
       </AppBar>
       {/* <Main open={open} >

@@ -22,7 +22,7 @@ function MainLayout(props) {
                 <title>{props.title ?? 'Item'}</title>
             </Head>
             <CssBaseline />
-            <Navbar toggleTheme={toggleTheme} />
+            <Navbar toggleTheme={toggleTheme} theme={theme} />
             {props.withContainer ? 
             <Container maxWidth={props.maxWidth ?? "xl"} disableGutters={props.disableGutters} sx={{mt:8,...props?.mainSx,height:'100vh'}}>        
                     {props.children}         

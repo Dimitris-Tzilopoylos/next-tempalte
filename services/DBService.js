@@ -8,7 +8,7 @@ const pool = mysql.createPool({
     user:process.env.DB_USER,
     password:process.env.DB_PASSWORD,
     multipleStatements:true,
-    connectionLimit:30,
+    connectionLimit:10,
     waitForConnections:true,
     
 })
@@ -30,7 +30,10 @@ class DBService {
     }
 
     async close() {
-        if(this.connection_status) this.connection.release()
+        try {
+            this.connection.release()
+            
+        } catch(error) {}
         this.transaction_started = false
         this.connection_status = false
     }

@@ -58,6 +58,7 @@ export const getCategories = (page=1,view=12) => async (dispatch,getState) => {
         })
         dispatch(setCategories({...res.data}))
     } catch (error) {
+        dispatch(setCategories({categories:[],categoriesPage:1,categoriesLimit:1,total_categories:0}))
         status = false
     } finally {
         dispatch(categoriesLoading(false))
@@ -153,6 +154,82 @@ export const deleteSuperCategory = (id) => async (dispatch,getState) => {
         dispatch(addNotification({notification:'Supercategory was not deleted',variant:'error'}))
     } finally {
         dispatch(supercategoriesLoading(false))
+        return status
+    }
+
+} 
+
+
+/// CRUD CATEGORIES 
+
+export const createCategory = (formData) => async (dispatch,getState) => {
+    let status = true 
+    try {
+        const data = {}
+        const image =  await convertFile(formData.image.file)
+        Object.keys(formData).forEach(key => {
+            data[key] = formData[key].value !== undefined  ? formData[key].value : image
+        })
+        dispatch(categoriesLoading(true))
+        let res = await axios.post(`${API}/categories/manage`,data)
+        dispatch(addNotification({notification:res.data.message,variant:'success'}))
+        await dispatch(getSupercategories())
+        await dispatch(getCategories())
+    } catch (error) {
+        console.log(error)
+        status = false
+        dispatch(addNotification({notification:'Category was not created',variant:'error'}))
+    } finally {
+        dispatch(categoriesLoading(false))
+        return status
+    }
+}
+
+
+
+export const updateCategory = (id,formData) => async (dispatch,getState) => {
+    let status = true 
+    try {
+        if(!id) throw new Error('No Category provided')
+        const data = {}
+        const image =  formData.image?.file ? await convertFile(formData.image.file) : formData.image.src
+        Object.keys(formData).forEach(key => {
+            data[key] = formData[key].value !== undefined  ? formData[key].value  : image
+        })
+        data.id = id
+        dispatch(categoriesLoading(true))
+        let res = await axios.put(`${API}/categories/manage`,data)
+        dispatch(addNotification({notification:res.data.message,variant:'success'}))
+        await dispatch(getSupercategories())
+        await dispatch(getCategories())
+    } catch (error) {
+        status = false
+        dispatch(addNotification({notification:'Category was not updated',variant:'error'}))
+    } finally {
+        dispatch(categoriesLoading(false))
+        return status
+    }
+
+} 
+
+
+export const deleteCategory = (id) => async (dispatch,getState) => {
+    let status = true 
+    try {
+        if(!id) throw new Error('No Category provided')
+         
+        dispatch(categoriesLoading(true))
+        let res = await axios.delete(`${API}/categories/manage`,{
+            data:{id}
+        })
+        dispatch(addNotification({notification:res.data.message,variant:'success'}))
+        await dispatch(getSupercategories())
+        await dispatch(getCategories())
+    } catch (error) {
+        status = false
+        dispatch(addNotification({notification:'Category was not deleted',variant:'error'}))
+    } finally {
+        dispatch(categoriesLoading(false))
         return status
     }
 

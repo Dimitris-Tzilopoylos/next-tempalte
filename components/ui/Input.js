@@ -39,7 +39,7 @@ export default function TextInput(props) {
           sx={props.sx}
           onChange={props.onChange}
           value={props.value ?? ''}
-           required={props.required}
+          required={props.required}
         />
         {props.helperText && <FormHelperText>{props.helperText}</FormHelperText>}
       </FormControl>  

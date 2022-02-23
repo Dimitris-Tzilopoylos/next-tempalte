@@ -22,6 +22,7 @@ export default function DataTable(props) {
         sx={{width:'100%',height:'100%',...props?.sx}}
         page={props.page ? props.page  : 0}
         autoHeight={props.autoHeight ?? true}
+        disableColumnFilter={props.disableColumnFilter}
         
       />
    
